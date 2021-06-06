@@ -1,33 +1,10 @@
-use iced::{executor, Application, Clipboard, Command, Element, Settings, Text};
+use iced::{Sandbox, Settings};
 
-struct GUI;
+use browser_lib::Browser;
 
-impl Application for GUI {
-    type Executor = executor::Default;
-    type Message = ();
-    type Flags = ();
-
-    fn new(_flags: ()) -> (GUI, Command<Self::Message>) {
-        (GUI, Command::none())
-    }
-
-    fn title(&self) -> String {
-        String::from("DEMO")
-    }
-
-    fn update(
-        &mut self,
-        _message: Self::Message,
-        _clipboard: &mut Clipboard,
-    ) -> Command<Self::Message> {
-        Command::none()
-    }
-
-    fn view(&mut self) -> Element<Self::Message> {
-        Text::new("Hello, world").into()
-    }
-}
-
-fn main() {
-    GUI::run(Settings::default());
+pub fn main() -> iced::Result {
+    Browser::run(Settings {
+        default_font: Some(include_bytes!("../fonts/Mamelon-5-Hi-Regular.otf")),
+        ..Settings::default()
+    })
 }

@@ -10,3 +10,7 @@ async-std = "1.9.0"
 iced = "0.3.0"
 iced_futures = "0.3.0"
 iced_native = "0.4.0"
+
+[lib]
+name = "browser_lib"
+path = "lib/browser.rs"
