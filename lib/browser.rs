@@ -5,9 +5,8 @@ mod style;
 
 use crate::steps::{StepMessage, Steps};
 use iced::{
-    button, scrollable, slider, Button, Checkbox, Color, Column, Container, Element,
-    HorizontalAlignment, Image, Length, Radio, Row, Sandbox, Scrollable, Settings, Slider, Space,
-    Text, TextInput,
+    button, scrollable, Button, Color, Column, Container, Element, HorizontalAlignment, Length,
+    Row, Sandbox, Scrollable, Space, Text,
 };
 
 pub struct Browser {

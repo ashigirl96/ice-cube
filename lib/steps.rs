@@ -1,6 +1,6 @@
 use iced::{
-    slider, text_input, Checkbox, Color, Column, Container, Element, HorizontalAlignment, Image,
-    Length, Radio, Row, Scrollable, Settings, Slider, Space, Text, TextInput,
+    slider, text_input, Checkbox, Color, Column, Element, HorizontalAlignment, Length, Radio, Row,
+    Slider, Text, TextInput,
 };
 
 use crate::language::Language;
