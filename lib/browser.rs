@@ -1,13 +1,17 @@
-mod language;
-mod layout;
-mod steps;
-mod style;
-
-use crate::steps::{StepMessage, Steps};
 use iced::{
     button, scrollable, Button, Color, Column, Container, Element, HorizontalAlignment, Length,
     Row, Sandbox, Scrollable, Space, Text,
 };
+
+use crate::step_message::StepMessage;
+use crate::steps::Steps;
+
+mod language;
+mod layout;
+mod step;
+mod step_message;
+mod steps;
+mod style;
 
 pub struct Browser {
     steps: Steps,
