@@ -1,5 +1,5 @@
 [package]
-name = "iced-example"
+name = "pusher"
 version = "0.1.0"
 edition = "2018"
 
@@ -10,12 +10,3 @@ async-std = "1.9.0"
 iced = "0.3.0"
 iced_futures = "0.3.0"
 iced_native = "0.4.0"
-
-[lib]
-name = "browser_lib"
-path = "lib/browser.rs"
-
-[workspace]
-members = [
-    "examples/pusher",
-]
