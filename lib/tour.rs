@@ -13,7 +13,7 @@ mod step_message;
 mod steps;
 mod style;
 
-pub struct Browser {
+pub struct Tour {
     steps: Steps,
     scroll: scrollable::State,
     back_button: button::State,
@@ -28,7 +28,7 @@ pub enum Message {
     StepMessage(StepMessage),
 }
 
-impl Sandbox for Browser {
+impl Sandbox for Tour {
     type Message = Message;
 
     fn new() -> Self {
