@@ -9,11 +9,15 @@ pub struct History {
 
 impl History {
     pub fn forward(&mut self) {
-        self.current = min(self.current + 1, self.length())
+        if self.length() != 0 {
+            self.current = min(self.current + 1, self.length())
+        }
     }
 
     pub fn back(&mut self) {
-        self.current = max(self.current - 1, 1)
+        if self.length() != 0 {
+            self.current = max(self.current - 1, 1)
+        }
     }
 
     pub fn push(&mut self, path: &str) {
@@ -37,6 +41,15 @@ impl History {
             Some(path) => path.clone(),
             None => empty,
         }
+    }
+
+    pub fn no_back(&self) -> bool {
+        println!("current: {}", self.current);
+        self.length() == 0 || self.current < 1
+    }
+
+    pub fn no_next(&self) -> bool {
+        self.current == self.length()
     }
 }
 
@@ -106,5 +119,13 @@ mod tests {
         history.forward();
         assert_eq!(history.path(), "3".to_string());
         assert_eq!(history.length(), 3);
+    }
+
+    #[test]
+    fn test_ha() {
+        let mut history = History::default();
+        dbg!(&history);
+        history.back();
+        history.forward();
     }
 }

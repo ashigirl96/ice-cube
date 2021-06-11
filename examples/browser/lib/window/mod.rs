@@ -4,7 +4,7 @@ use history::History;
 
 #[derive(Debug, Default, Clone)]
 pub struct Window {
-    history: History,
+    pub history: History,
 }
 
 impl Window {

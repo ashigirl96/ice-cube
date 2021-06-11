@@ -13,28 +13,6 @@ impl Steps {
     pub fn new() -> Steps {
         Steps {
             steps: vec![
-                Step::Welcome,
-                Step::Slider {
-                    state: slider::State::new(),
-                    value: 50,
-                },
-                Step::RowsAndColumns {
-                    layout: Layout::Row,
-                    spacing_slider: slider::State::new(),
-                    spacing: 20,
-                },
-                Step::Text {
-                    size_slider: slider::State::new(),
-                    size: 30,
-                    color_sliders: [slider::State::new(); 3],
-                    color: Color::BLACK,
-                },
-                Step::Radio { selection: None },
-                Step::Image {
-                    width: 300,
-                    slider: slider::State::new(),
-                },
-                Step::Scrollable,
                 Step::TextInput {
                     value: String::new(),
                     is_secure: false,

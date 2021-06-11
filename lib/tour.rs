@@ -46,6 +46,7 @@ impl Sandbox for Tour {
     }
 
     fn update(&mut self, event: Message) {
+        println!("update: {:?}", event);
         match event {
             Message::BackPressed => {
                 self.steps.go_back();
@@ -60,6 +61,7 @@ impl Sandbox for Tour {
     }
 
     fn view(&mut self) -> Element<Message> {
+        println!("view");
         let Self {
             steps,
             scroll,
