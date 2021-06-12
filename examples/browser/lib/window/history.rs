@@ -1,23 +1,30 @@
 use std::cmp::{max, min};
 use std::collections::VecDeque;
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Clone)]
 pub struct History {
     history: VecDeque<String>,
     current: usize,
 }
 
+impl Default for History {
+    fn default() -> Self {
+        let mut history = VecDeque::new();
+        history.push_back("wabi://new-tab-page".to_string());
+        Self {
+            history,
+            current: 1,
+        }
+    }
+}
+
 impl History {
     pub fn forward(&mut self) {
-        if self.length() != 0 {
-            self.current = min(self.current + 1, self.length())
-        }
+        self.current = min(self.current + 1, self.length())
     }
 
     pub fn back(&mut self) {
-        if self.length() != 0 {
-            self.current = max(self.current - 1, 1)
-        }
+        self.current = max(self.current - 1, 1)
     }
 
     pub fn push(&mut self, path: &str) {
@@ -28,28 +35,27 @@ impl History {
         self.current = self.length();
     }
 
-    pub fn length(&self) -> usize {
-        self.history.len()
-    }
-
     pub fn path(&self) -> String {
-        let empty = "".to_string();
-        if self.length() == 0 {
-            return empty;
-        }
-        match self.history.get(self.current - 1) {
+        match self.history.get(self.index()) {
             Some(path) => path.clone(),
-            None => empty,
+            None => "".to_string(),
         }
     }
 
     pub fn no_back(&self) -> bool {
-        println!("current: {}", self.current);
-        self.length() == 0 || self.current < 1
+        self.index() == 0
     }
 
     pub fn no_next(&self) -> bool {
         self.current == self.length()
+    }
+
+    pub fn length(&self) -> usize {
+        self.history.len()
+    }
+
+    fn index(&self) -> usize {
+        self.current - 1
     }
 }
 
@@ -71,13 +77,13 @@ mod tests {
         history.back();
         history.back();
         history.back();
-        assert_eq!(history.path(), "1".to_string());
+        assert_eq!(history.path(), "wabi://new-tab-page".to_string());
         history.forward();
-        assert_eq!(history.path(), "2".to_string());
+        assert_eq!(history.path(), "1".to_string());
         history.push("4");
         assert_eq!(history.path(), "4".to_string());
         history.back();
-        assert_eq!(history.path(), "2".to_string());
+        assert_eq!(history.path(), "1".to_string());
         history.forward();
         history.forward();
         assert_eq!(history.path(), "4".to_string());
@@ -86,7 +92,7 @@ mod tests {
     #[test]
     fn test_path() {
         let mut history = History::default();
-        assert_eq!(history.path(), "".to_string());
+        assert_eq!(history.path(), "wabi://new-tab-page".to_string());
         history.push("1");
         assert_eq!(history.path(), "1".to_string());
     }
@@ -95,7 +101,7 @@ mod tests {
     fn test_push() {
         let history = init();
         assert_eq!(history.path(), "3".to_string());
-        assert_eq!(history.length(), 3);
+        assert_eq!(history.length(), 4);
     }
 
     #[test]
@@ -106,8 +112,8 @@ mod tests {
         history.back();
         history.back();
         history.back();
-        assert_eq!(history.path(), "1".to_string());
-        assert_eq!(history.length(), 3);
+        assert_eq!(history.path(), "wabi://new-tab-page".to_string());
+        assert_eq!(history.length(), 4);
     }
 
     #[test]
@@ -118,14 +124,6 @@ mod tests {
         assert_eq!(history.path(), "3".to_string());
         history.forward();
         assert_eq!(history.path(), "3".to_string());
-        assert_eq!(history.length(), 3);
-    }
-
-    #[test]
-    fn test_ha() {
-        let mut history = History::default();
-        dbg!(&history);
-        history.back();
-        history.forward();
+        assert_eq!(history.length(), 4);
     }
 }

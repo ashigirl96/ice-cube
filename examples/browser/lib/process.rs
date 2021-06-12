@@ -3,9 +3,10 @@ use iced::{
     HorizontalAlignment, Length, Row, Sandbox, Scrollable, Space, Text, TextInput, Vector,
     VerticalAlignment,
 };
-use iced_native::Widget;
 
 use window::Window;
+
+use crate::window::location::Location;
 
 mod window;
 
@@ -13,12 +14,9 @@ pub struct BrowserProcess {
     back_button: button::State,
     next_button: button::State,
     reload_button: button::State,
-    path_input: PathInputState,
     window: Window,
     debug: bool,
 }
-
-struct Location {}
 
 #[derive(Debug, Clone)]
 pub enum ProcessMessage {
@@ -43,7 +41,6 @@ impl Sandbox for BrowserProcess {
             back_button: button::State::new(),
             next_button: button::State::new(),
             reload_button: button::State::new(),
-            path_input: PathInputState::default(),
             window: Window::default(),
             debug: false,
         }
@@ -57,17 +54,19 @@ impl Sandbox for BrowserProcess {
         match event {
             ProcessMessage::BackPressed => {
                 self.window.history.back();
-                println!("history.ブラウザバック {:?}", &self.window.history.path());
+                self.window.location.href = self.window.history.path();
+                dbg!(&self.window.location.href);
             }
             ProcessMessage::NextPressed => {
                 self.window.history.forward();
-                println!("history.forward {:?}", &self.window.history.path());
+                self.window.location.href = self.window.history.path();
+                dbg!(&self.window.location.href);
             }
             ProcessMessage::InputPath(path) => {
-                self.path_input.value = path;
+                self.window.location.href = path;
             }
             ProcessMessage::Enter => {
-                self.window.history.push(&self.path_input.value);
+                self.window.history.push(&self.window.location.href);
                 println!("Enter!! path is {:?}", &self.window.history);
             }
             _ => {}
@@ -78,25 +77,28 @@ impl Sandbox for BrowserProcess {
         let Self {
             back_button,
             next_button,
-            path_input,
             window,
             ..
         } = self;
+        let Window {
+            history,
+            location,
+        } = window;
 
         let mut controls = Row::new();
 
         let mut back = button(back_button, "←").style(Buttons::Secondary);
-        if !window.history.no_back() {
+        if !history.no_back() {
             back = back.on_press(ProcessMessage::BackPressed)
         }
         let mut next = button(next_button, "→").style(Buttons::Secondary);
-        if !window.history.no_next() {
+        if !history.no_next() {
             next = next.on_press(ProcessMessage::NextPressed)
         }
         controls = controls.push(back);
         controls = controls.push(next);
-        let PathInputState { value, state } = path_input;
-        controls = controls.push(text_input(state, value));
+        let Location { href, state } = location;
+        controls = controls.push(text_input(state, href));
 
         Container::new(controls).into()
     }
@@ -116,10 +118,12 @@ fn button<'a, Message: Clone>(state: &'a mut button::State, label: &str) -> Butt
 }
 
 fn text_input<'a>(state: &'a mut text_input::State, value: &str) -> Column<'a, ProcessMessage> {
-    let text_input = TextInput::new(state, "URL...", value, ProcessMessage::InputPath)
+    let mut text_input = TextInput::new(state, "URL...", value, ProcessMessage::InputPath)
         .padding(10)
-        .width(Length::Fill)
-        .on_submit(ProcessMessage::Enter);
+        .width(Length::Fill);
+    if !value.is_empty() {
+        text_input = text_input.on_submit(ProcessMessage::Enter);
+    }
 
     let txt_inp = Column::new().push(text_input);
     txt_inp
